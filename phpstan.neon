@@ -1,0 +1,23 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app/
+        - src/
+
+    # Level 9 is the highest level
+    level: 9
+
+    ignoreErrors:
+        # - '#Dead catch - Exception is never thrown in the try block.#'
+
+    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+
+    checkMissingIterableValueType: false
+
+    treatPhpDocTypesAsCertain: false
+
+    checkGenericClassInNonGenericObjectType: false
