@@ -1,12 +1,15 @@
-# Laravel 10 API skeleton template
+# Book Exchange API
 
-Basic **Laravel 10** basic API skeleton template with few packages installed to use as a starting point.
+API for a Book Exchanging community.
 
 ## Features
 
-- Prepared for API versioning.
-- `Src` namespace declared for a DDD approach.
+- User registration.
+- Admin dashboard.
 
-## Included packages
+## Admin Dashboard
 
-Take a look at the `composer.json` file to see the full list of packages included.
+Visit `/admin` to access the admin dashboard. The default credentials are:
+
+- Email: `john.doe@book-exchange.com`
+- Password: `12345678`
