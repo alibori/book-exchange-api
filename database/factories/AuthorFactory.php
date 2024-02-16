@@ -8,7 +8,7 @@ use App\Models\Author;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Author>
+ * @extends Factory<Author>
  */
 final class AuthorFactory extends Factory
 {
@@ -27,7 +27,7 @@ final class AuthorFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name,
+            'name' => fake()->name . ' ' . fake()->lastName,
         ];
     }
 }

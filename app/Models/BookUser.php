@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $book_id
  * @property int $user_id
  * @property int $quantity
- * @property int $status
+ * @property string $status
  *
  * @property Book $book
  * @property User $user
@@ -33,8 +33,7 @@ class BookUser extends Model
 	protected $casts = [
 		'book_id' => 'int',
 		'user_id' => 'int',
-		'quantity' => 'int',
-		'status' => 'int'
+		'quantity' => 'int'
 	];
 
 	protected $fillable = [

@@ -16,7 +16,10 @@ return new class extends Migration
             $table->foreignId('book_id')->constrained('books')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->tinyInteger('quantity')->default(1);
-            $table->tinyInteger('status')->default(1);
+            $table->enum('status', [
+                'available',
+                'borrowed',
+            ])->default('available');
         });
     }
 

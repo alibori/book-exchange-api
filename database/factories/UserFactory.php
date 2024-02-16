@@ -29,7 +29,7 @@ final class UserFactory extends Factory
     {
         return [
             'name' => fake()->name,
-            'surname' => fake()->word,
+            'surname' => fake()->lastName,
             'email' => fake()->unique()->safeEmail,
             'email_verified_at' => fake()->optional()->dateTime(),
             'phone' => fake()->optional()->phoneNumber,

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Book;
 use App\Models\Loan;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Loan>
+ * @extends Factory<Loan>
  */
 final class LoanFactory extends Factory
 {
@@ -27,8 +29,8 @@ final class LoanFactory extends Factory
     public function definition(): array
     {
         return [
-            'book_id' => \App\Models\Book::factory(),
-            'lender_id' => \App\Models\User::factory(),
+            'book_id' => Book::factory(),
+            'lender_id' => User::factory(),
             'borrower_id' => fake()->randomNumber(),
             'quantity' => fake()->boolean,
             'status' => fake()->boolean,

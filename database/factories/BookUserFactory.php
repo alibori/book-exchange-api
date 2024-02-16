@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\BookUserStatusEnum;
+use App\Models\Book;
 use App\Models\BookUser;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\BookUser>
+ * @extends Factory<BookUser>
  */
 final class BookUserFactory extends Factory
 {
@@ -27,10 +30,10 @@ final class BookUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'book_id' => \App\Models\Book::factory(),
-            'user_id' => \App\Models\User::factory(),
-            'quantity' => fake()->boolean,
-            'status' => fake()->boolean,
+            'book_id' => Book::inRandomOrder()->first(),
+            'user_id' => User::inRandomOrder()->first(),
+            'quantity' => 1,
+            'status' => $this->faker->randomElement([BookUserStatusEnum::Available, BookUserStatusEnum::Borrowed])
         ];
     }
 }

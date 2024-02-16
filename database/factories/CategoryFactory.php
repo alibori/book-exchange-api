@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Category>
+ * @extends Factory<Category>
  */
 final class CategoryFactory extends Factory
 {
@@ -27,7 +27,7 @@ final class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'parent_id' => \App\Models\Category::factory(),
+            'parent_id' => null,
             'name' => fake()->name,
         ];
     }

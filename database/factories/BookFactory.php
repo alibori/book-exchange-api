@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Book>
+ * @extends Factory<Book>
  */
 final class BookFactory extends Factory
 {
@@ -27,10 +29,23 @@ final class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'category_id' => \App\Models\Category::factory(),
-            'author_id' => \App\Models\Author::factory(),
-            'title' => fake()->title,
+            'category_id' => Category::inRandomOrder()->first(),
+            'author_id' => Author::inRandomOrder()->first(),
+            'title' => fake()->unique()->sentence(),
             'description' => fake()->text,
         ];
+    }
+
+    public function configure(): BookFactory
+    {
+        return $this->afterMaking(function (Book $book) {
+            $loop = rand(1, 5);
+
+            BookUserFactory::new()->for(factory: $book)->count(count: $loop)->make();
+        })->afterCreating(function (Book $book) {
+            $loop = rand(1, 5);
+
+            BookUserFactory::new()->for(factory: $book)->count(count: $loop)->create();
+        });
     }
 }
