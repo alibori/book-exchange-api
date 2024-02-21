@@ -16,5 +16,13 @@ return [
             'name' => 'User',
             'namespace' => 'Src\\User',
         ],
+        'book' => [
+            'name' => 'Book',
+            'namespace' => 'Src\\Book',
+        ],
+        'loan' => [
+            'name' => 'Loan',
+            'namespace' => 'Src\\Loan',
+        ],
     ]
 ];

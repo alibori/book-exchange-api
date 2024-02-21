@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Src\User\Infrastructure\Providers\UserDomainServiceProvider;
 
 return [
 
@@ -171,6 +172,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        /*
+         * Domain Service Providers...
+         */
+        UserDomainServiceProvider::class
     ])->toArray(),
 
     /*

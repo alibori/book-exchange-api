@@ -53,6 +53,26 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
 	];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $fillable = [
+        'name',
+        'surname',
+        'email',
+        'email_verified_at',
+        'phone',
+        'address',
+        'city',
+        'country',
+        'postal_code',
+        'avatar',
+        'password',
+        'remember_token',
+    ];
+
 	public function books(): BelongsToMany
     {
 		return $this->belongsToMany(Book::class)

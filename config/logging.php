@@ -128,6 +128,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // Custom log channels
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/custom/api.log'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];
