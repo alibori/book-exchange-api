@@ -19,7 +19,7 @@ final class RegisterUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:50'],
             'surname' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'email' => ['required', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['required', 'string', 'max:20'],
             'address' => ['required', 'string', 'max:100'],
