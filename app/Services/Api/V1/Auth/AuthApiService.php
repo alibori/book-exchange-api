@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services\Api\V1\Auth;
 
 use App\Exceptions\ApiException;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Src\User\Application\UseCases\CreateUserUseCase;
 use Src\User\Application\UseCases\GetUserUseCase;
@@ -59,5 +61,18 @@ final class AuthApiService
             'message' => 'User logged in successfully',
             'token' => $user->createToken(name: 'auth_token')->plainTextToken,
         ];
+    }
+
+    /**
+     * Log out a User
+     *
+     * @return void
+     */
+    public function logoutUser(): void
+    {
+        /** @var User $current_user */
+        $current_user = Auth::user();
+
+        $current_user->tokens()->delete();
     }
 }
