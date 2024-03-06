@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Rating
@@ -45,6 +46,11 @@ class Rating extends Model
 		'rating',
 		'comment'
 	];
+
+    public function rateable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
 	public function user(): BelongsTo
     {
