@@ -7,8 +7,10 @@ namespace Src\User\Infrastructure\Providers;
 use Illuminate\Support\ServiceProvider;
 use Src\User\Domain\Queries\CreateUserQuery;
 use Src\User\Domain\Queries\GetUserQuery;
+use Src\User\Domain\Queries\UpdateUserQuery;
 use Src\User\Infrastructure\Contracts\CreateUserQueryContract;
 use Src\User\Infrastructure\Contracts\GetUserQueryContract;
+use Src\User\Infrastructure\Contracts\UpdateUserQueryContract;
 
 final class UserDomainServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ final class UserDomainServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         CreateUserQueryContract::class => CreateUserQuery::class,
+        UpdateUserQueryContract::class => UpdateUserQuery::class,
         GetUserQueryContract::class => GetUserQuery::class,
     ];
 
