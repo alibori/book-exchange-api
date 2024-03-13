@@ -7,8 +7,10 @@ namespace App\Http\Controllers\Api\V1\User;
 use App\Exceptions\ApiException;
 use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Common\PaginationRequest;
 use App\Http\Requests\Api\V1\User\UpdateUserRequest;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Http\Resources\Api\V1\UserResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
 use App\Services\Api\V1\User\UserApiService;
@@ -24,11 +26,29 @@ final class UserApiController extends Controller
     {}
 
     /**
-     * Display a listing of the resource.
+     * GET /api/v1/users
+     * Endpoint to get a paginated list of Users
+     *
+     * @param PaginationRequest $request
+     * @return ResourceResponse|MessageResponse
      */
-    public function index()
+    public function index(PaginationRequest $request): ResourceResponse|MessageResponse
     {
-        //
+        try {
+            $response = $this->user_api_service->listUsers(pagination_data: $request->validated());
+        } catch (Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new ResourceResponse(
+            data: new UserResourceCollection(resource: $response),
+            status: Response::HTTP_OK
+        );
     }
 
     /**

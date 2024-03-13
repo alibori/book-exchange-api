@@ -20,7 +20,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('users', UserApiController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::apiResource('users', UserApiController::class)->only(['index', 'show', 'update', 'destroy']); // TODO: Implement destroy method
 
     Route::delete('logout', LogoutUserApiController::class);
 });
