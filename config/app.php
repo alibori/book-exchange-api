@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Src\Book\Infrastructure\Providers\BookDomainServiceProvider;
 use Src\User\Infrastructure\Providers\UserDomainServiceProvider;
 
 return [
@@ -176,7 +177,8 @@ return [
         /*
          * Domain Service Providers...
          */
-        UserDomainServiceProvider::class
+        UserDomainServiceProvider::class,
+        BookDomainServiceProvider::class
     ])->toArray(),
 
     /*

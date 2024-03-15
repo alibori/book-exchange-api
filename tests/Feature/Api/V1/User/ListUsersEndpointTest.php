@@ -4,7 +4,6 @@ namespace Tests\Feature\Api\V1\User;
 
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ListUsersEndpointTest extends TestCase
