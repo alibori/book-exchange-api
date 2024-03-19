@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -46,6 +47,7 @@ class User extends Authenticatable
 {
     use HasApiTokens;
 	use HasFactory;
+    use Notifiable;
     use SoftDeletes;
 	protected $table = 'users';
 
@@ -84,6 +86,11 @@ class User extends Authenticatable
     {
 		return $this->hasMany(Loan::class, 'lender_id');
 	}
+
+    public function book_applications(): HasMany
+    {
+        return $this->hasMany(BookApplication::class);
+    }
 
 	public function ratings(): MorphMany
     {

@@ -56,4 +56,9 @@ class Category extends Model
     {
 		return $this->hasMany(Category::class, 'parent_id');
 	}
+
+    public function book_applications(): HasMany
+    {
+        return $this->hasMany(BookApplication::class);
+    }
 }

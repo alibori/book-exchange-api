@@ -37,4 +37,9 @@ class Author extends Model
     {
 		return $this->hasMany(Book::class);
 	}
+
+    public function book_applications(): HasMany
+    {
+        return $this->hasMany(BookApplication::class);
+    }
 }

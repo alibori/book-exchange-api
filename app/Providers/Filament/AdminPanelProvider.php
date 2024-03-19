@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\LoginPage;
 use App\Filament\Widgets\StatsOverview;
+use App\Models\BookApplication;
+use App\Observers\BookApplicationObserver;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -57,5 +59,10 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css');
+    }
+
+    public function boot(): void
+    {
+        BookApplication::observe(BookApplicationObserver::class);
     }
 }
