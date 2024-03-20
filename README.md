@@ -31,4 +31,4 @@ Visit `/admin` to access the admin dashboard. The default credentials are:
 
 ## API Documentation
 
-The API documentation is available at `/api/docs`.
+The API documentation is available at `/docs/api`.

@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Exception;
 use Throwable;
 
+/**
+ * @tags Authentication
+ */
 final class RegisterUserApiController extends Controller
 {
     use HasLogs;

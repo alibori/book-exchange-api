@@ -18,6 +18,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/**
+ * @tags Books
+ */
 final class BookApiController extends Controller
 {
     use HasLogs;

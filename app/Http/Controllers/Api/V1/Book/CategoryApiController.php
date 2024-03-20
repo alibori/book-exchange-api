@@ -15,6 +15,9 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/**
+ * @tags Books
+ */
 final class CategoryApiController extends Controller
 {
     use HasLogs;

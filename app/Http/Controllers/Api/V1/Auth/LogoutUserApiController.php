@@ -12,6 +12,9 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/**
+ * @tags Users
+ */
 final class LogoutUserApiController extends Controller
 {
     use HasLogs;
