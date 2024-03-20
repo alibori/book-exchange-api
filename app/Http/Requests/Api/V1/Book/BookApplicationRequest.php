@@ -7,7 +7,7 @@ namespace App\Http\Requests\Api\V1\Book;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class ListBooksRequest extends FormRequest
+final class BookApplicationRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,10 +17,11 @@ final class ListBooksRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'results' => 'integer|min:1|max:100',
-            'page' => 'integer|min:1',
-            'title' => 'string|max:255',
-            'author' => 'string|max:255',
+            'author_id' => 'nullable|integer|exists:authors,id',
+            'author_name' => 'required_without:author_id|string',
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'title' => 'required|string',
+            'description' => 'required|string',
         ];
     }
 }

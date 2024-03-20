@@ -6,7 +6,9 @@ namespace App\Http\Controllers\Api\V1\Book;
 
 use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Book\BookApplicationRequest;
 use App\Http\Requests\Api\V1\Book\ListBooksRequest;
+use App\Http\Resources\Api\V1\BookApplicationResource;
 use App\Http\Resources\Api\V1\BookResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
@@ -50,11 +52,29 @@ final class BookApiController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * POST /api/v1/books
+     * Endpoint to make a book application.
+     *
+     * @param BookApplicationRequest $request
+     * @return ResourceResponse|MessageResponse
      */
-    public function store(Request $request)
+    public function store(BookApplicationRequest $request): ResourceResponse|MessageResponse
     {
-        //
+        try {
+            $response = $this->book_api_service->bookApply(data: $request->validated());
+        } catch (Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new ResourceResponse(
+            data: BookApplicationResource::make($response),
+            status: Response::HTTP_CREATED
+        );
     }
 
     /**

@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $author_name
  * @property string $title
  * @property string $description
- * @property string $status
+ * @property BookApplicationStatusEnum $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Notifications\Book;
 
-use App\Enums\BookApplicationStatusEnum;
 use App\Models\BookApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-final class BookApplicationStatusUpdatedNotification extends Notification implements ShouldQueue
+final class BookApplicationCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -36,17 +35,10 @@ final class BookApplicationStatusUpdatedNotification extends Notification implem
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $status = match ($this->book_application->status) {
-            BookApplicationStatusEnum::Approved => __('Approved'),
-            BookApplicationStatusEnum::Rejected => __('Rejected'),
-            default => __('Pending'),
-        };
-
         return (new MailMessage)
-            ->subject(subject: __('Your book application has been updated!'))
+            ->subject(__('Your book application has been received!'))
             ->line(__('Hello').' '.$this->book_application->user->name.',')
-            ->line(__('The status of your book application has been updated to:'))
-            ->line(__('Status:').' '.$status)
+            ->line(__('We have received your book application. We will review it and get back to you soon.'))
             ->line(__('If you have any questions, feel free to contact us.'))
             ->line(__('Thank you for taking care of our planet!'));
     }

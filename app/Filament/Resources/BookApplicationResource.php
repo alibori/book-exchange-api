@@ -30,7 +30,8 @@ class BookApplicationResource extends Resource
                     ->relationship('author', 'name'),
                 Forms\Components\TextInput::make('author_name'),
                 Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name'),
+                    ->relationship('category', 'name')
+                    ->required(),
                 Forms\Components\TextInput::make('title')->required(),
                 Forms\Components\Textarea::make('description')->required(),
                 Forms\Components\Select::make('status')->options(BookApplicationStatusEnum::class)->required(),
