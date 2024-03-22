@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Enums\LoanStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $lender_id
  * @property int $borrower_id
  * @property int $quantity
- * @property int $status
+ * @property LoanStatusEnum $status
  * @property Carbon $from
  * @property Carbon $to
  * @property Carbon|null $created_at
@@ -40,7 +41,7 @@ class Loan extends Model
 		'lender_id' => 'int',
 		'borrower_id' => 'int',
 		'quantity' => 'int',
-		'status' => 'int',
+		'status' => LoanStatusEnum::class,
 		'from' => 'datetime',
 		'to' => 'datetime'
 	];
@@ -60,8 +61,13 @@ class Loan extends Model
 		return $this->belongsTo(Book::class);
 	}
 
-	public function user(): BelongsTo
+	public function lender(): BelongsTo
     {
 		return $this->belongsTo(User::class, 'lender_id');
 	}
+
+    public function borrower(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'borrower_id');
+    }
 }

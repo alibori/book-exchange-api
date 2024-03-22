@@ -17,7 +17,15 @@ return new class extends Migration
             $table->foreignId('lender_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('borrower_id')->constrained('users')->cascadeOnDelete();
             $table->tinyInteger('quantity')->default(1);
-            $table->tinyInteger('status')->default(1);
+            $table->enum('status', [
+                'requested',
+                'approved',
+                'rejected',
+                'returned',
+                'overdue',
+                'lost',
+                'cancelled'
+            ])->default('requested');
             $table->date('from');
             $table->date('to');
             $table->timestamps();

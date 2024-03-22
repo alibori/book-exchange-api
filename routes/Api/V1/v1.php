@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Auth\RegisterUserApiController;
 use App\Http\Controllers\Api\V1\Book\BookApiController;
 use App\Http\Controllers\Api\V1\Book\BookApplicationApiController;
 use App\Http\Controllers\Api\V1\Book\CategoryApiController;
+use App\Http\Controllers\Api\V1\Loan\LoanApiController;
 use App\Http\Controllers\Api\V1\User\UserApiController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('categories', CategoryApiController::class);
+
+    Route::apiResource('loans', LoanApiController::class); // TODO: Implement all methods
 
     Route::delete('logout', LogoutUserApiController::class);
 });

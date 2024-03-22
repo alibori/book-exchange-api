@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src\Book\Domain\Queries;
 
 use App\Models\BookUser;
 use Src\Book\Infrastructure\Contracts\UpdateBookUserQueryContract;
 
-class UpdateBookUserQuery implements UpdateBookUserQueryContract
+final class UpdateBookUserQuery implements UpdateBookUserQueryContract
 {
 
     /**

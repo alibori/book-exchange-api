@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\LoanStatusEnum;
 use App\Filament\Resources\LoansResource\Pages;
-use App\Filament\Resources\LoansResource\RelationManagers;
 use App\Models\Loan;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -21,7 +21,15 @@ class LoansResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('lender_id')
+                    ->relationship('lender', 'name')->required(),
+                Forms\Components\Select::make('borrower_id')
+                    ->relationship('borrower', 'name')->required(),
+                Forms\Components\Select::make('book_id')
+                    ->relationship('book', 'title')->required(),
+                Forms\Components\Datepicker::make('from')->required(),
+                Forms\Components\Datepicker::make('to')->required(),
+                Forms\Components\Select::make('status')->options(LoanStatusEnum::class)->required(),
             ]);
     }
 
@@ -29,7 +37,14 @@ class LoansResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('lender.name')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('borrower.name')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('book.title')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('from')->date()->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('to')->date()->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -37,11 +52,6 @@ class LoansResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
