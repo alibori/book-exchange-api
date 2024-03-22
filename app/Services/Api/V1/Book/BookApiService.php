@@ -16,6 +16,7 @@ use Src\Book\Application\UseCases\CreateBookApplicationUseCase;
 use Src\Book\Application\UseCases\CreateBookUserUseCase;
 use Src\Book\Application\UseCases\GetBookUserUseCase;
 use Src\Book\Application\UseCases\ListBooksUseCase;
+use Src\Book\Application\UseCases\UpdateBookUserUseCase;
 use Symfony\Component\HttpFoundation\Response;
 
 final class BookApiService
@@ -24,7 +25,8 @@ final class BookApiService
         private readonly ListBooksUseCase $list_books_use_case,
         private readonly CreateBookApplicationUseCase $create_book_application_use_case,
         private readonly GetBookUserUseCase $get_book_user_use_case,
-        private readonly CreateBookUserUseCase $create_book_user_use_case
+        private readonly CreateBookUserUseCase $create_book_user_use_case,
+        private readonly UpdateBookUserUseCase $update_book_user_use_case
     )
     {}
 
@@ -100,6 +102,33 @@ final class BookApiService
         }
 
         return $book_user->delete();
+    }
+
+    /**
+     * Update Book's q from the User's Library
+     *
+     * @param array $data
+     * @param string $book_id
+     * @return bool
+     * @throws ApiException
+     */
+    public function updateInLibrary(array $data, string $book_id): bool
+    {
+        $current_user_id = Auth::id();
+        $data['user_id'] = $current_user_id;
+        $data['book_id'] = $book_id;
+
+        if (!is_numeric($book_id)) {
+            throw new ApiException(trans(key: 'errors.invalid_query_parameters'), Response::HTTP_BAD_REQUEST);
+        }
+
+        $book_user = $this->get_book_user_use_case->handle(user_id: $current_user_id, book_id: (int)$book_id);
+
+        if (!$book_user) {
+            throw new ApiException(trans(key: 'errors.book.not_in_library'), Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->update_book_user_use_case->handle(data: $data, book_user: $book_user);
     }
 
     /**

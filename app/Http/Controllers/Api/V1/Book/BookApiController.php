@@ -9,6 +9,7 @@ use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Book\AddBookRequest;
 use App\Http\Requests\Api\V1\Book\ListBooksRequest;
+use App\Http\Requests\Api\V1\Book\UpdateBookRequest;
 use App\Http\Resources\Api\V1\BookResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
@@ -88,11 +89,44 @@ final class BookApiController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * PUT /api/v1/books/{id}
+     * Endpoint to update a Book quantity in the User's Library.
+     *
+     * @param UpdateBookRequest $request
+     * @param string $id
+     * @return MessageResponse
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookRequest $request, string $id): MessageResponse
     {
-        //
+        try {
+            $response = $this->book_api_service->updateInLibrary(data: $request->validated(), book_id: $id);
+        } catch (ApiException|Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            if ($e instanceof ApiException) {
+                return new MessageResponse(
+                    data: ['error' => $e->getMessage()],
+                    status: $e->getCode()
+                );
+            }
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        if (!$response) {
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new MessageResponse(
+            data: ['message' => trans(key: 'messages.book.updated_in_library')],
+            status: Response::HTTP_OK
+        );
     }
 
     /**

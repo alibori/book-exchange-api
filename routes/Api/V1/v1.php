@@ -25,7 +25,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserApiController::class)->only(['index', 'show', 'update', 'destroy']); // TODO: Implement destroy method
 
-    Route::apiResource('books', BookApiController::class)->only(['index', 'show', 'store', 'update', 'destroy']); // TODO: Implement all methods
+    Route::apiResource('books', BookApiController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::prefix('books')->group(function () {
         Route::apiResource('applications', BookApplicationApiController::class)->only(['index', 'store', 'update', 'destroy']); // TODO: Implement index/update/destroy methods

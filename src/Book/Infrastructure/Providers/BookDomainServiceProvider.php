@@ -10,11 +10,13 @@ use Src\Book\Domain\Queries\CreateBookUserQuery;
 use Src\Book\Domain\Queries\GetBookUserQuery;
 use Src\Book\Domain\Queries\ListBooksQuery;
 use Src\Book\Domain\Queries\ListCategoriesQuery;
+use Src\Book\Domain\Queries\UpdateBookUserQuery;
 use Src\Book\Infrastructure\Contracts\CreateBookApplicationQueryContract;
 use Src\Book\Infrastructure\Contracts\CreateBookUserQueryContract;
 use Src\Book\Infrastructure\Contracts\GetBookUserQueryContract;
 use Src\Book\Infrastructure\Contracts\ListBooksQueryContract;
 use Src\Book\Infrastructure\Contracts\ListCategoriesQueryContract;
+use Src\Book\Infrastructure\Contracts\UpdateBookUserQueryContract;
 
 final class BookDomainServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ final class BookDomainServiceProvider extends ServiceProvider
         ListCategoriesQueryContract::class => ListCategoriesQuery::class,
         GetBookUserQueryContract::class => GetBookUserQuery::class,
         CreateBookUserQueryContract::class => CreateBookUserQuery::class,
+        UpdateBookUserQueryContract::class => UpdateBookUserQuery::class,
     ];
 
     /**
