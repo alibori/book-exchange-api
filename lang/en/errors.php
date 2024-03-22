@@ -18,5 +18,10 @@ return [
         'not_found' => 'User not found',
     ],
 
-];
+    /** Book Domain errors */
+    'book' => [
+        'not_found' => 'Book not found',
+        'already_in_library' => 'Book already in the library',
+    ],
 
+];

@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\V1\Book;
 use Database\Factories\AuthorFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateBookApplicationEndpointTest extends TestCase
@@ -24,7 +23,7 @@ class CreateBookApplicationEndpointTest extends TestCase
         $author = AuthorFactory::new()->create();
 
         $response = $this->actingAs(user: $user)->postJson(
-            uri: '/api/v1/books',
+            uri: '/api/v1/books/applications',
             data: [
                 'author_id' => $author->id,
                 'title' => 'Book Title',
@@ -63,7 +62,7 @@ class CreateBookApplicationEndpointTest extends TestCase
     public function test_create_book_application_endpoint_returns_401_status_code_when_user_is_not_logged_in(): void
     {
         $response = $this->postJson(
-            uri: '/api/v1/books',
+            uri: '/api/v1/books/applications',
             data: [
                 'author_id' => 1,
                 'title' => 'Book Title',

@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Book;
 
+use App\Exceptions\ApiException;
 use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\Book\BookApplicationRequest;
+use App\Http\Requests\Api\V1\Book\AddBookRequest;
 use App\Http\Requests\Api\V1\Book\ListBooksRequest;
 use App\Http\Resources\Api\V1\BookApplicationResource;
 use App\Http\Resources\Api\V1\BookResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
+use App\Models\BookUser;
 use App\Services\Api\V1\Book\BookApiService;
 use Exception;
 use Illuminate\Http\Request;
@@ -56,17 +58,24 @@ final class BookApiController extends Controller
 
     /**
      * POST /api/v1/books
-     * Endpoint to make a book application.
+     * Endpoint to add a Book in the User's Library.
      *
-     * @param BookApplicationRequest $request
-     * @return ResourceResponse|MessageResponse
+     * @param AddBookRequest $request
+     * @return MessageResponse
      */
-    public function store(BookApplicationRequest $request): ResourceResponse|MessageResponse
+    public function store(AddBookRequest $request): MessageResponse
     {
         try {
-            $response = $this->book_api_service->bookApply(data: $request->validated());
-        } catch (Exception|Throwable $e) {
+            $this->book_api_service->addToLibrary(data: $request->validated());
+        } catch (ApiException|Exception|Throwable $e) {
             $this->logError(exception: $e, channel: 'api');
+
+            if ($e instanceof ApiException) {
+                return new MessageResponse(
+                    data: ['error' => $e->getMessage()],
+                    status: $e->getCode()
+                );
+            }
 
             return new MessageResponse(
                 data: ['error' => trans(key: 'errors.unknown_error')],
@@ -74,8 +83,8 @@ final class BookApiController extends Controller
             );
         }
 
-        return new ResourceResponse(
-            data: BookApplicationResource::make($response),
+        return new MessageResponse(
+            data: ['message' => trans(key: 'messages.book.added_to_library')],
             status: Response::HTTP_CREATED
         );
     }
