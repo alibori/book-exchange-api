@@ -9,11 +9,9 @@ use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Book\AddBookRequest;
 use App\Http\Requests\Api\V1\Book\ListBooksRequest;
-use App\Http\Resources\Api\V1\BookApplicationResource;
 use App\Http\Resources\Api\V1\BookResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
-use App\Models\BookUser;
 use App\Services\Api\V1\Book\BookApiService;
 use Exception;
 use Illuminate\Http\Request;
@@ -90,14 +88,6 @@ final class BookApiController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
@@ -106,10 +96,42 @@ final class BookApiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * DELETE /api/v1/books/{id}
+     * Endpoint to remove a Book from the User's Library.
+     *
+     * @param string $id
+     * @return MessageResponse
      */
-    public function destroy(string $id)
+    public function destroy(string $id): MessageResponse
     {
-        //
+        try {
+            $response = $this->book_api_service->removeFromLibrary(book_id: $id);
+        } catch (ApiException|Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            if ($e instanceof ApiException) {
+                return new MessageResponse(
+                    data: ['error' => $e->getMessage()],
+                    status: $e->getCode()
+                );
+            }
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        if (!$response) {
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new MessageResponse(
+            data: ['message' => trans(key: 'messages.book.removed_from_library')],
+            status: Response::HTTP_OK
+        );
     }
 }

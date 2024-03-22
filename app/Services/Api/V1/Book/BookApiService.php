@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Api\V1\Book;
 
+use App\Enums\BookUserStatusEnum;
 use App\Exceptions\ApiException;
 use App\Models\BookApplication;
 use App\Models\BookUser;
@@ -73,6 +74,32 @@ final class BookApiService
         }
 
         return $this->create_book_user_use_case->handle(data: $data);
+    }
+
+    /**
+     * Remove a Book from the User's Library
+     *
+     * @param string $book_id
+     * @return bool
+     * @throws ApiException
+     */
+    public function removeFromLibrary(string $book_id): bool
+    {
+        $current_user_id = Auth::id();
+
+        if (!is_numeric($book_id)) {
+            throw new ApiException(trans(key: 'errors.invalid_query_parameters'), Response::HTTP_BAD_REQUEST);
+        }
+
+        $book_user = $this->get_book_user_use_case->handle(user_id: $current_user_id, book_id: (int)$book_id);
+
+        if (!$book_user) {
+            throw new ApiException(trans(key: 'errors.book.not_in_library'), Response::HTTP_NOT_FOUND);
+        } elseif ($book_user->status === (BookUserStatusEnum::Borrowed)->value) {
+            throw new ApiException(trans(key: 'errors.book.is_borrowed'), Response::HTTP_FORBIDDEN);
+        }
+
+        return $book_user->delete();
     }
 
     /**

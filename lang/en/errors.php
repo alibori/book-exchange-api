@@ -10,6 +10,7 @@ return [
 
     'unknown_error' => 'An unknown error occurred. Please try again later.',
     'invalid_credentials' => 'Invalid credentials',
+    'invalid_query_parameters' => 'Invalid query parameters',
     'unauthorized' => 'Unauthorized',
     'forbidden' => 'Forbidden',
 
@@ -22,6 +23,8 @@ return [
     'book' => [
         'not_found' => 'Book not found',
         'already_in_library' => 'Book already in the library',
+        'not_in_library' => 'Book not in the library',
+        'is_borrowed' => 'Book is borrowed',
     ],
 
 ];
