@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Book\Infrastructure\Contracts;
 
+use App\Enums\BookUserStatusEnum;
 use App\Models\BookUser;
 
 interface UpdateBookUserQueryContract
@@ -11,7 +12,7 @@ interface UpdateBookUserQueryContract
     /**
      * Update a BookUser record.
      *
-     * @param array{quantity: int} $attributes
+     * @param array{quantity: int, status: BookUserStatusEnum} $attributes
      * @param BookUser $book_user
      * @return int
      */

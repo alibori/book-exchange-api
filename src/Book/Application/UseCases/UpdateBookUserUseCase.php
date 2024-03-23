@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Book\Application\UseCases;
 
+use App\Enums\BookUserStatusEnum;
 use App\Models\BookUser;
 use Src\Book\Infrastructure\Contracts\UpdateBookUserQueryContract;
 
@@ -15,7 +16,7 @@ final class UpdateBookUserUseCase
     /**
      * Update a Book in the User's Library
      *
-     * @param array{quantity: int} $data
+     * @param array{quantity: int, status: BookUserStatusEnum} $data
      * @param BookUser $book_user
      * @return bool
      */
