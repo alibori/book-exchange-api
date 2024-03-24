@@ -30,6 +30,7 @@ return [
     /** Loan Domain errors */
     'loan' => [
         'not_found' => 'Loan not found',
+        'non_property' => 'Loan does not belong to the current user',
     ],
 
 ];

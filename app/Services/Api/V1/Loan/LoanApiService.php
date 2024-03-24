@@ -50,6 +50,45 @@ final class LoanApiService
     }
 
     /**
+     * Get a Loan by ID
+     *
+     * @param string $loan_id
+     * @return Loan
+     * @throws ApiException
+     */
+    public function getLoanById(string $loan_id): Loan
+    {
+        $current_user_id = Auth::id();
+
+        if (!is_numeric($loan_id)) {
+            throw new ApiException(
+                message: trans(key: 'errors.invalid_query_parameters'),
+                code: Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $loan = $this->get_loan_use_case->handle(search_criteria: ['id' => (int)$loan_id]);
+
+        if (!$loan || $loan->count() === 0) {
+            throw new ApiException(
+                message: trans(key: 'errors.loan.not_found'),
+                code: Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $loan = $loan->first();
+
+        if ($loan->borrower_id !== $current_user_id && $loan->lender_id !== $current_user_id) {
+            throw new ApiException(
+                message: trans(key: 'errors.loan.non_property'),
+                code: Response::HTTP_FORBIDDEN
+            );
+        }
+
+        return $loan->load(['lender', 'borrower', 'book']);
+    }
+
+    /**
      * Request a Loan
      *
      * @param array $data

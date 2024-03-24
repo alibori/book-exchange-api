@@ -89,11 +89,36 @@ final class LoanApiController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * GET /api/v1/loans/{id}
+     * Endpoint to get a Loan by ID
+     *
+     * @param string $id
+     * @return ResourceResponse|MessageResponse
      */
-    public function show(string $id)
+    public function show(string $id): ResourceResponse|MessageResponse
     {
-        //
+        try {
+            $response = $this->loan_api_service->getLoanById(loan_id: $id);
+        } catch (ApiException|Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            if ($e instanceof ApiException) {
+                return new MessageResponse(
+                    data: ['error' => $e->getMessage()],
+                    status: $e->getCode()
+                );
+            }
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new ResourceResponse(
+            data: LoanResource::make($response),
+            status: Response::HTTP_OK
+        );
     }
 
     /**
