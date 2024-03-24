@@ -6,7 +6,11 @@ namespace Src\Loan\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Src\Loan\Domain\Queries\CreateLoanQuery;
+use Src\Loan\Domain\Queries\GetLoanByCriteriaQuery;
+use Src\Loan\Domain\Queries\UpdateLoanStatusQuery;
 use Src\Loan\Infrastructure\Contracts\CreateLoanQueryContract;
+use Src\Loan\Infrastructure\Contracts\GetLoanByCriteriaQueryContract;
+use Src\Loan\Infrastructure\Contracts\UpdateLoanStatusQueryContract;
 
 final class LoanDomainServiceProvider extends ServiceProvider
 {
@@ -15,6 +19,8 @@ final class LoanDomainServiceProvider extends ServiceProvider
      */
     public array $bindings = [
          CreateLoanQueryContract::class => CreateLoanQuery::class,
+        GetLoanByCriteriaQueryContract::class => GetLoanByCriteriaQuery::class,
+        UpdateLoanStatusQueryContract::class => UpdateLoanStatusQuery::class,
     ];
 
     /**

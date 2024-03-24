@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src\Loan\Domain\Queries;
 
 use App\Models\Loan;
 use Src\Loan\Infrastructure\Contracts\CreateLoanQueryContract;
 
-class CreateLoanQuery implements CreateLoanQueryContract
+final class CreateLoanQuery implements CreateLoanQueryContract
 {
 
     /**

@@ -4,9 +4,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | API messagess Language Lines
+    | API messages Language Lines
     |--------------------------------------------------------------------------
-    *//** User Domain messages */
+    */
+    /** User Domain messages */
     'user' => [
     ],
 
@@ -17,4 +18,8 @@ return [
         'updated_in_library' => 'Book updated in the library',
     ],
 
+    /** Loan Domain errors */
+    'loan' => [
+        'status_updated' => 'Loan status updated',
+    ],
 ];

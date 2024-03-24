@@ -27,4 +27,9 @@ return [
         'is_borrowed' => 'Book is borrowed',
     ],
 
+    /** Loan Domain errors */
+    'loan' => [
+        'not_found' => 'Loan not found',
+    ],
+
 ];

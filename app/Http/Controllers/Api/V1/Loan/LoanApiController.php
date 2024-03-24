@@ -8,6 +8,7 @@ use App\Exceptions\ApiException;
 use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Loan\RequestLoanRequest;
+use App\Http\Requests\Api\V1\Loan\UpdateLoanRequest;
 use App\Http\Resources\Api\V1\LoanResource;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
@@ -77,11 +78,37 @@ final class LoanApiController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * PUT /api/v1/loans/{id}
+     * Endpoint to update a Loan's status
+     *
+     * @param UpdateLoanRequest $request
+     * @param string $id
+     * @return MessageResponse
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateLoanRequest $request, string $id): MessageResponse
     {
-        //
+        try {
+            $this->loan_api_service->updateLoanStatus(data: $request->validated(), loan_id: $id);
+        } catch (ApiException|Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            if ($e instanceof ApiException) {
+                return new MessageResponse(
+                    data: ['error' => $e->getMessage()],
+                    status: $e->getCode()
+                );
+            }
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new MessageResponse(
+            data: ['message' => trans(key: 'messages.loan.status_updated')],
+            status: Response::HTTP_OK
+        );
     }
 
     /**
