@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\V1\Book;
 
 use Database\Factories\AuthorFactory;
 use Database\Factories\BookFactory;
+use Database\Factories\BookUserFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -34,6 +35,7 @@ class ListBooksEndpointTest extends TestCase
                         'title',
                         'author',
                         'category',
+                        'users'
                     ]
                 ],
                 'pagination',
@@ -124,6 +126,40 @@ class ListBooksEndpointTest extends TestCase
                 ],
                 'pagination',
             ]);
+    }
+
+    /**
+     * @test
+     * Test that list books endpoint returns 200 status code and a paginated list of books filtered by library
+     *
+     * @return void
+     */
+    public function test_list_books_endpoint_returns_200_status_code_and_a_paginated_list_of_books_filtered_by_library(): void
+    {
+        $user = UserFactory::new()->create();
+
+        BookUserFactory::new()->count(count: 3)->create(attributes: [
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs(user: $user)->getJson(
+            uri: '/api/v1/books?library=mine',
+        );
+
+        $response->assertStatus(status: 200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'author',
+                        'category',
+                    ]
+                ],
+                'pagination',
+            ]);
+
+        $this->assertCount(expectedCount: 3, haystack: $response->json(key: 'data'));
     }
 
     /**

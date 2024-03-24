@@ -53,7 +53,11 @@ final class BookApiService
             $filters['author'] = $data['author'];
         }
 
-        return $this->list_books_use_case->handle(relationships: ['author', 'category'], filters: $filters, per_page: $per_page);
+        if (isset($data['library'])) {
+            $filters['library'] = $data['library'];
+        }
+
+        return $this->list_books_use_case->handle(relationships: ['author', 'category', 'users'], filters: $filters, per_page: $per_page);
     }
 
     /**

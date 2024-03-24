@@ -6,7 +6,9 @@ namespace App\Http\Resources\Api\V1;
 
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
@@ -21,6 +23,7 @@ use JsonSerializable;
  * @property string $description
  * @property Category $category
  * @property Author $author
+ * @property Collection<User> $users
  */
 final class BookResource extends JsonResource
 {
@@ -38,6 +41,7 @@ final class BookResource extends JsonResource
 			'author' => $this->whenLoaded('author', fn() => $this->author->name),
 			'title' => $this->title,
 			'description' => $this->description,
+            'users' => $this->whenLoaded('users', fn() => new UserResourceCollection($this->users)),
         ];
     }
 }

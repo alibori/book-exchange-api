@@ -21,6 +21,7 @@ final class ListBooksRequest extends FormRequest
             'page' => 'integer|min:1',
             'title' => 'string|max:255',
             'author' => 'string|max:255',
+            'library' => 'string|in:all,mine',
         ];
     }
 }
