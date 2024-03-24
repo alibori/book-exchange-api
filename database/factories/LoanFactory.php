@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\LoanStatusEnum;
 use App\Models\Book;
 use App\Models\Loan;
 use App\Models\User;
@@ -31,9 +32,9 @@ final class LoanFactory extends Factory
         return [
             'book_id' => Book::factory(),
             'lender_id' => User::factory(),
-            'borrower_id' => fake()->randomNumber(),
-            'quantity' => fake()->boolean,
-            'status' => fake()->boolean,
+            'borrower_id' => User::factory(),
+            'quantity' => 1,
+            'status' => fake()->randomElement([LoanStatusEnum::Requested, LoanStatusEnum::Approved, LoanStatusEnum::Rejected]),
             'from' => fake()->date(),
             'to' => fake()->date(),
         ];

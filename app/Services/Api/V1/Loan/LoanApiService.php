@@ -8,13 +8,18 @@ use App\Enums\BookUserStatusEnum;
 use App\Enums\LoanStatusEnum;
 use App\Exceptions\ApiException;
 use App\Models\Loan;
+use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Src\Book\Application\UseCases\GetBookUserUseCase;
 use Src\Book\Application\UseCases\UpdateBookUserUseCase;
 use Src\Loan\Application\UseCases\CreateLoanUseCase;
 use Src\Loan\Application\UseCases\GetLoanUseCase;
+use Src\Loan\Application\UseCases\ListLoansUseCase;
 use Src\Loan\Application\UseCases\UpdateLoanStatusUseCase;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 final class LoanApiService
 {
@@ -23,9 +28,26 @@ final class LoanApiService
         private readonly UpdateBookUserUseCase $update_book_user_use_case,
         private readonly CreateLoanUseCase $create_loan_use_case,
         private readonly GetLoanUseCase $get_loan_use_case,
-        private readonly UpdateLoanStatusUseCase $update_loan_status_use_case
+        private readonly UpdateLoanStatusUseCase $update_loan_status_use_case,
+        private readonly ListLoansUseCase $list_loans_use_case
     )
     {}
+
+    /**
+     * List a paginated list of Loans where the current user is the borrower or lender
+     *
+     * @param array{results?: int, page?: int, status?: LoanStatusEnum, as?: string} $data
+     * @return Paginator
+     */
+    public function list(array $data): Paginator
+    {
+        $current_user_id = Auth::id();
+
+        return $this->list_loans_use_case->handle(
+            user_id: $current_user_id,
+            filters: $data
+        );
+    }
 
     /**
      * Request a Loan
@@ -69,6 +91,7 @@ final class LoanApiService
      * @param string $loan_id
      * @return Loan
      * @throws ApiException
+     * @throws Throwable
      */
     public function updateLoanStatus(array $data, string $loan_id): Loan
     {
@@ -123,37 +146,47 @@ final class LoanApiService
             );
         }
 
-        $loan_updated = $this->update_loan_status_use_case->handle(loan_id: $loan->id, status: $data['status']);
+        DB::beginTransaction();
 
-        if ($loan_updated->status === LoanStatusEnum::Approved || $loan_updated->status === LoanStatusEnum::Returned) {
-            if ($book_user->status === (BookUserStatusEnum::Borrowed)->value && $loan_updated->status === LoanStatusEnum::Returned) {
-                $this->update_book_user_use_case->handle(
-                    data: ['status' => BookUserStatusEnum::Available],
-                    book_user: $book_user
-                );
-            } elseif ($loan_updated->status === LoanStatusEnum::Approved) {
-                if ($book_user->quantity === 1) {
+        try {
+            $loan_updated = $this->update_loan_status_use_case->handle(loan_id: $loan->id, status: $data['status']);
+
+            if ($loan_updated->status === LoanStatusEnum::Approved || $loan_updated->status === LoanStatusEnum::Returned) {
+                if ($book_user->status === (BookUserStatusEnum::Borrowed)->value && $loan_updated->status === LoanStatusEnum::Returned) {
                     $this->update_book_user_use_case->handle(
-                        data: ['status' => BookUserStatusEnum::Borrowed],
+                        data: ['status' => BookUserStatusEnum::Available],
                         book_user: $book_user
                     );
-                } else {
-                    $active_loans = $this->get_loan_use_case->handle(search_criteria: ['lender_id' => $loan_updated->lender_id, 'book_id' => $loan_updated->book_id]);
-
-                    // Get the number of active loans for the book. This means with status different from Returned, Cancelled or Rejected
-                    $active_loans_count = $active_loans->filter(function ($loan) {
-                        return $loan->status !== LoanStatusEnum::Returned && $loan->status !== LoanStatusEnum::Cancelled && $loan->status !== LoanStatusEnum::Rejected;
-                    })->count();
-
-                    if ($active_loans_count === $book_user->quantity) {
+                } elseif ($loan_updated->status === LoanStatusEnum::Approved) {
+                    if ($book_user->quantity === 1) {
                         $this->update_book_user_use_case->handle(
                             data: ['status' => BookUserStatusEnum::Borrowed],
                             book_user: $book_user
                         );
+                    } else {
+                        $active_loans = $this->get_loan_use_case->handle(search_criteria: ['lender_id' => $loan_updated->lender_id, 'book_id' => $loan_updated->book_id]);
+
+                        // Get the number of active loans for the book. This means with status different from Returned, Cancelled or Rejected
+                        $active_loans_count = $active_loans->filter(function ($loan) {
+                            return $loan->status !== LoanStatusEnum::Returned && $loan->status !== LoanStatusEnum::Cancelled && $loan->status !== LoanStatusEnum::Rejected;
+                        })->count();
+
+                        if ($active_loans_count === $book_user->quantity) {
+                            $this->update_book_user_use_case->handle(
+                                data: ['status' => BookUserStatusEnum::Borrowed],
+                                book_user: $book_user
+                            );
+                        }
                     }
                 }
             }
+        } catch (Exception|Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
         }
+
+        DB::commit();
 
         return $loan_updated;
     }

@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('categories', CategoryApiController::class);
 
-    Route::apiResource('loans', LoanApiController::class); // TODO: Implement all methods
+    Route::apiResource('loans', LoanApiController::class)->except(['destroy']); // TODO: Implement all methods
 
     Route::delete('logout', LogoutUserApiController::class);
 });

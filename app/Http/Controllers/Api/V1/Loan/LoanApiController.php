@@ -7,14 +7,15 @@ namespace App\Http\Controllers\Api\V1\Loan;
 use App\Exceptions\ApiException;
 use App\Http\Concerns\HasLogs;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Loan\ListLoansRequest;
 use App\Http\Requests\Api\V1\Loan\RequestLoanRequest;
 use App\Http\Requests\Api\V1\Loan\UpdateLoanRequest;
 use App\Http\Resources\Api\V1\LoanResource;
+use App\Http\Resources\Api\V1\LoanResourceCollection;
 use App\Http\Responses\MessageResponse;
 use App\Http\Responses\ResourceResponse;
 use App\Services\Api\V1\Loan\LoanApiService;
 use Exception;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -29,11 +30,29 @@ final class LoanApiController extends Controller
     {}
 
     /**
-     * Display a listing of the resource.
+     * GET /api/v1/loans
+     * Endpoint to get a paginated list of Loans where the current user is the borrower or lender
+     *
+     * @param ListLoansRequest $request
+     * @return ResourceResponse|MessageResponse
      */
-    public function index()
+    public function index(ListLoansRequest $request): ResourceResponse|MessageResponse
     {
-        //
+        try {
+            $response = $this->loan_api_service->list(data: $request->validated());
+        } catch (Exception|Throwable $e) {
+            $this->logError(exception: $e, channel: 'api');
+
+            return new MessageResponse(
+                data: ['error' => trans(key: 'errors.unknown_error')],
+                status: Response::HTTP_SERVICE_UNAVAILABLE
+            );
+        }
+
+        return new ResourceResponse(
+            data: new LoanResourceCollection(resource: $response),
+            status: Response::HTTP_OK
+        );
     }
 
     /**
@@ -109,13 +128,5 @@ final class LoanApiController extends Controller
             data: ['message' => trans(key: 'messages.loan.status_updated')],
             status: Response::HTTP_OK
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
