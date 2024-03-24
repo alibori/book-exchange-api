@@ -1,6 +1,6 @@
 # Book Exchange API
 
-API for a Book Exchanging community.
+API for a Book Exchanging community. This project is still under development.
 
 ## Installation
 
@@ -20,7 +20,11 @@ API for a Book Exchanging community.
 ## Features
 
 - User registration.
+- User profile management.
 - Admin dashboard.
+- Book library management.
+- Book loans requests.
+- Email notifications.
 
 ## Admin Dashboard
 

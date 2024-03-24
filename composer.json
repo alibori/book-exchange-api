@@ -1,10 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "alibori/book-exchange-api",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "API for the Book Exchange application",
     "keywords": [
         "laravel",
-        "framework"
+        "api",
+        "book-exchange",
+        "filament"
     ],
     "license": "MIT",
     "require": {
